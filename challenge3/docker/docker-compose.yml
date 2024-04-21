@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+ nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+    depends_on:
+      - node-service
+
+ node-service:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    env_file: ./.env
+    environment:
+      - DB_HOST=${DB_HOST}
+      - DB_USER=${DB_USERNAME}
+      - DB_NAME=${DB_DATABASE}
+      - DB_PASSWORD=${DB_PASSWORD}
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+
+ db:
+    build:
+      context: ./db
+      dockerfile: Dockerfile
+    ports:
+      - "3306:3306"
+    container_name: db_1
+    env_file: ./.env
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+    volumes:
+      - db_data:/var/lib/mariadb
+
+volumes:
+ db_data:
