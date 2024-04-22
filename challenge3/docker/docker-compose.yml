@@ -20,8 +20,6 @@ services:
       - DB_USER=${DB_USERNAME}
       - DB_NAME=${DB_DATABASE}
       - DB_PASSWORD=${DB_PASSWORD}
-    ports:
-      - "3000:3000"
     depends_on:
       - db
 
@@ -29,6 +27,7 @@ services:
     build:
       context: ./db
       dockerfile: Dockerfile
+    restart: always
     ports:
       - "3306:3306"
     container_name: db_1
